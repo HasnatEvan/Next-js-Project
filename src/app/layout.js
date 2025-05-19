@@ -1,5 +1,9 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import { Toaster } from "react-hot-toast"; // 🔥 Toast যোগ করা হলো
+import NestAuthProvider from "@/Providers/NestAuthProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,10 +23,16 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <NestAuthProvider>
+          <Navbar />
+          {/* ✅ Toast container */}
+          <Toaster position="top-center" reverseOrder={false} />
+          <main className="max-w-screen-xl mx-auto">{children}</main>
+
+        </NestAuthProvider>
+
+        <Footer />
       </body>
     </html>
   );
