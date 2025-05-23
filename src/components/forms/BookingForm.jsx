@@ -1,13 +1,23 @@
 "use client";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { FaSpinner } from "react-icons/fa";
+import {
+  FaSpinner,
+  FaUser,
+  FaEnvelope,
+  FaPhone,
+  FaMapMarkerAlt,
+  FaCalendarAlt,
+} from "react-icons/fa";
 import toast from "react-hot-toast";
 
 const BookingForm = ({ data }) => {
   const { data: session } = useSession();
+  const router = useRouter();
+
   const [checkInDate, setCheckInDate] = useState(new Date());
   const [checkOutDate, setCheckOutDate] = useState(() => {
     const tomorrow = new Date();
@@ -20,12 +30,12 @@ const BookingForm = ({ data }) => {
     1,
     Math.ceil((checkOutDate - checkInDate) / (1000 * 60 * 60 * 24))
   );
-
   const totalPrice = totalDays * data.price;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+
     const form = e.target;
     const name = form.name.value;
     const email = form.email.value;
@@ -38,6 +48,7 @@ const BookingForm = ({ data }) => {
         email: session?.user?.email,
         image: session?.user?.image,
       },
+      admin: data.admin?.email,
       bookingId: data._id,
       roomName: data.roomName,
       roomType: data.roomType,
@@ -50,21 +61,22 @@ const BookingForm = ({ data }) => {
       totalPrice,
       phone,
       address,
+      status: "pending",
       bookingDate: new Date().toISOString(),
     };
 
     try {
-      const res = await fetch("/api/rooms", {
+      const res = await fetch("https://hotelbookings-system-app.vercel.app/api/rooms", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(bookingData),
       });
 
-      // Delay response for 3 seconds
       setTimeout(() => {
         if (res.ok) {
           toast.success("✅ Booking successful!");
           form.reset();
+          router.push("/my-bookings");
         } else {
           toast.error("❌ Failed to book. Please try again.");
         }
@@ -80,57 +92,71 @@ const BookingForm = ({ data }) => {
   };
 
   return (
-    <div className=" px-4 sm:px-6 lg:px-0  bg-white">
+    <div className="px-4 sm:px-6 lg:px-8 py-6 bg-white">
       <form
         onSubmit={handleSubmit}
-        className="max-w-2xl mx-auto space-y-6 bg-white text-black p-6 "
+        className="max-w-2xl mx-auto space-y-6 text-black bg-white p-4 sm:p-6 "
       >
+        {/* Name */}
         <div>
-          <label className="block font-semibold mb-1">Full Name</label>
+          <label className="block font-semibold mb-1 flex items-center gap-2 text-sm sm:text-base">
+            <FaUser /> Full Name
+          </label>
           <input
             type="text"
             name="name"
             defaultValue={session?.user?.name || ""}
             required
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#3972C1]"
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm sm:text-base"
           />
         </div>
 
+        {/* Email */}
         <div>
-          <label className="block font-semibold mb-1">Email Address</label>
+          <label className="block font-semibold mb-1 flex items-center gap-2 text-sm sm:text-base">
+            <FaEnvelope /> Email Address
+          </label>
           <input
             type="email"
             name="email"
             defaultValue={session?.user?.email || ""}
             required
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#3972C1]"
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm sm:text-base"
           />
         </div>
 
+        {/* Phone */}
         <div>
-          <label className="block font-semibold mb-1">Phone Number</label>
+          <label className="block font-semibold mb-1 flex items-center gap-2 text-sm sm:text-base">
+            <FaPhone /> Phone Number
+          </label>
           <input
             type="tel"
             name="phone"
             required
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#3972C1]"
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm sm:text-base"
           />
         </div>
 
+        {/* Address */}
         <div>
-          <label className="block font-semibold mb-1">Address</label>
+          <label className="block font-semibold mb-1 flex items-center gap-2 text-sm sm:text-base">
+            <FaMapMarkerAlt /> Address
+          </label>
           <textarea
             name="address"
             required
             rows="3"
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#3972C1]"
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm sm:text-base"
           />
         </div>
 
-        {/* Dates - Grid for responsiveness */}
+        {/* Dates */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block font-semibold mb-1">Check-in Date</label>
+            <label className="block font-semibold mb-1 flex items-center gap-2 text-sm sm:text-base">
+              <FaCalendarAlt /> Check-in Date
+            </label>
             <DatePicker
               selected={checkInDate}
               onChange={(date) => {
@@ -146,12 +172,14 @@ const BookingForm = ({ data }) => {
               endDate={checkOutDate}
               minDate={new Date()}
               dateFormat="yyyy-MM-dd"
-              className="w-full border border-gray-300 rounded-lg px-4 py-2"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm sm:text-base"
             />
           </div>
 
           <div>
-            <label className="block font-semibold mb-1">Check-out Date</label>
+            <label className="block font-semibold mb-1 flex items-center gap-2 text-sm sm:text-base">
+              <FaCalendarAlt /> Check-out Date
+            </label>
             <DatePicker
               selected={checkOutDate}
               onChange={(date) => setCheckOutDate(date)}
@@ -160,20 +188,23 @@ const BookingForm = ({ data }) => {
               endDate={checkOutDate}
               minDate={checkInDate}
               dateFormat="yyyy-MM-dd"
-              className="w-full border border-gray-300 rounded-lg px-4 py-2"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm sm:text-base"
             />
           </div>
         </div>
 
-        <div className="text-center text-lg font-semibold text-gray-800 mt-4">
-          Total Price: <span className="text-[#3972C1]">৳ {totalPrice}</span> (
+        {/* Price Summary */}
+        <div className="text-center text-base sm:text-lg font-semibold text-gray-800 mt-4">
+          Total Price:{" "}
+          <span className="text-[#3972C1]">৳ {totalPrice}</span> (
           {totalDays} night{totalDays > 1 ? "s" : ""})
         </div>
 
+        {/* Submit Button */}
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-[#3972C1] hover:bg-[#2f5ea0] text-white py-3 rounded-lg font-semibold transition duration-300 flex justify-center items-center gap-2"
+          className="w-full bg-[#3972C1] hover:bg-[#2f5ea0] text-white py-3 rounded-lg font-semibold transition duration-300 flex justify-center items-center gap-2 text-sm sm:text-base"
         >
           {loading && <FaSpinner className="animate-spin text-white text-lg" />}
           {loading ? "Processing..." : "Confirm Booking"}

@@ -4,7 +4,7 @@ import dbConnect, { collectionNameObj } from "@/lib/dbConnect";
 import { ObjectId } from "mongodb";
 
 const DetailsPage = async ({ params }) => {
- const res=await fetch(`http://localhost:3000/api/rooms/${params.id}`)
+ const res=await fetch(`https://hotelbookings-system-app.vercel.app/api/rooms/${params.id}`)
 
 const data = await res.json();
 

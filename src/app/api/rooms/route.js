@@ -1,14 +1,40 @@
 import dbConnect, { collectionNameObj } from "@/lib/dbConnect";
+import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
+import { authOptions } from "../auth/[...nextauth]/route";
 
+
+
+
+
+
+
+
+
+
+
+
+
+export const GET = async (req) => {
+  const session = await getServerSession(authOptions);
+
+  if (session) {
+    const email = session.user?.email;
+
+    const bookingCollection = await dbConnect(collectionNameObj.bookingCollection);
+
+    // Correct way to query nested fields
+    const result = await bookingCollection.find({ "customer.email": email }).toArray();
+
+    return NextResponse.json(result);
+  }
+
+  return NextResponse.json([]);
+};
 export const POST = async (req) => {
   try {
     const body = await req.json();
-
-    // MongoDB collection
     const bookingCollection = await dbConnect(collectionNameObj.bookingCollection);
-
-    // Insert booking data
     const result = await bookingCollection.insertOne(body);
 
     return NextResponse.json(
