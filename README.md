@@ -1,36 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🏨 Hotel Booking System
 
-## Getting Started
+This is a **Hotel Booking Web Application** built with [Next.js](https://nextjs.org). Users can explore, search, and book hotels with ease. Designed with performance and scalability in mind, it provides a smooth and modern hotel booking experience.
 
-First, run the development server:
+Live Demo: [https://hotelbookings-system-app.vercel.app](https://hotelbookings-system-app.vercel.app/)
+
+---
+
+## 🚀 Features
+
+- 🔍 Browse and search hotels
+- 🛏️ View detailed hotel information
+- 🗓️ Book hotels with check-in/check-out dates
+- 🔐 Secure login with credentials and Google (NextAuth)
+- 📱 Fully responsive design for all devices
+- 🖼️ Optimized image and font loading using `next/image` and `next/font`
+
+---
+
+## 🛠️ Tech Stack
+
+- **Framework:** [Next.js 14+](https://nextjs.org)
+- **Frontend:** React, Tailwind CSS
+- **Authentication:** [NextAuth.js](https://next-auth.js.org/)
+- **Database:** MongoDB
+- **Hosting:** [Vercel](https://vercel.com)
+
+---
+
+## 📦 Getting Started
+
+First, clone the repository:
 
 ```bash
+git clone https://github.com/your-username/hotel-booking-system.git
+cd hotel-booking-system
+
+
+npm install
+# or
+yarn install
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+/app          # App router pages
+/components   # Reusable UI components
+/lib          # Utility functions
+/models       # Mongoose models
+/pages/api    # API routes
+/public       # Static assets (e.g., logo, images)
+/styles       # Global styles
 
-Open [https://hotelbookings-system-app.vercel.app](https://hotelbookings-system-app.vercel.app) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
